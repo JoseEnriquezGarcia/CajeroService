@@ -22,8 +22,8 @@ public class Cantidad {
     @ManyToOne
     public TipoMoneda IdTipoMoneda;
     
-    @Column(name = "cantidad")
-    private int Cantidad;
+    @Column(name = "cantidaddinero")
+    private int CantidadDinero;
     
     @Column(name = "denominacion")
     private String Denominacion;

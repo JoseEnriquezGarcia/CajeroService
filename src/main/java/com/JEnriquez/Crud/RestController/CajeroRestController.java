@@ -41,5 +41,19 @@ public class CajeroRestController {
         }
         return ResponseEntity.ok(result);
     }
+    
+    @GetMapping("/llenarCajero")
+    public ResponseEntity LlenarCajero() {
+        Result result = new Result();
+        try {
+            iCantidadDAO.llenarCajero();
+            result.correct = true;
+        } catch (Exception ex) {
+            result.correct = false;
+            result.errorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
 
+        return ResponseEntity.ok(result);
+    }
 }
