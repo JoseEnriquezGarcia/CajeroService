@@ -11,5 +11,5 @@ public interface ICantidadDAO extends JpaRepository<Cantidad, Integer> {
     void llenarCajero();
     
     @Query("SELECT SUM(c.CantidadDinero * c.Denominacion) FROM Cantidad c")
-    Integer cantidadTotal();
+    Double cantidadTotal();
 }

@@ -127,19 +127,21 @@ public class CajeroRestController {
                 List<Cantidad> lista = iCantidadDAO.findAll();
 
                 lista.sort((a, b) -> Double.compare(b.getDenominacion(), a.getDenominacion()));
-
+                
+                double restante = Math.round(monto);
+                
                 Map<Double, Integer> resultado = new HashMap<>();
 
                 for (Cantidad cantidadEfectivo : lista) {
                     double denominacion = cantidadEfectivo.getDenominacion();
                     int disponibles = cantidadEfectivo.getCantidadDinero();
 
-                    int cantidadUsar = (int) (monto / denominacion);
+                    int cantidadUsar = (int) (restante / denominacion);
 
                     if (cantidadUsar > 0 && disponibles > 0) {
                         int entregar = Math.min(cantidadUsar, disponibles);
 
-                        monto -= denominacion * entregar;
+                        restante -= denominacion * entregar;
 
                         resultado.put(denominacion, entregar);
 
@@ -147,7 +149,7 @@ public class CajeroRestController {
                         iCantidadDAO.save(cantidadEfectivo);
                     }
 
-                    if (monto == 0.0) {
+                    if (restante == 0.0) {
                         break;
                     }
                 }
