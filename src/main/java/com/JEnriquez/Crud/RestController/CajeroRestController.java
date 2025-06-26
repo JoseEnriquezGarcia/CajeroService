@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,8 @@ public class CajeroRestController {
     private ICantidadDAO iCantidadDAO;
     @Autowired
     private ITipoMonedaDAO iTipoMonedaDAO;
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity GetAllMonedas() {
         Result<TipoMoneda> result = new Result();
@@ -46,7 +48,8 @@ public class CajeroRestController {
         }
 
     }
-
+    
+    @PreAuthorize("hasRole('Admin')")
     @GetMapping("/cantidad")
     public ResponseEntity GetAllCantidad() {
         Result<Cantidad> result = new Result<>();
@@ -112,13 +115,11 @@ public class CajeroRestController {
         try {
             if (monto <= 0) {
                 result.correct = false;
-                result.errorMessage = "El monto debe ser mayor a 0.";
                 return ResponseEntity.badRequest().body(result);
             }
 
             if (monto > 12550) {
                 result.correct = false;
-                result.errorMessage = "El monto no puede ser mayor a $12,550.";
                 return ResponseEntity.badRequest().body(result);
             }
 
@@ -159,7 +160,6 @@ public class CajeroRestController {
                 return ResponseEntity.ok(result);
             } else {
                 result.correct = false;
-                result.errorMessage = "El cajero no cuenta con el monto requerido";
                 return ResponseEntity.badRequest().body(result.errorMessage);
             }
 
