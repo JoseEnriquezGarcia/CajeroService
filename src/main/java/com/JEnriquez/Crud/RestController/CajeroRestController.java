@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +26,6 @@ public class CajeroRestController {
     @Autowired
     private ITipoMonedaDAO iTipoMonedaDAO;
     
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity GetAllMonedas() {
         Result<TipoMoneda> result = new Result();
@@ -49,7 +47,6 @@ public class CajeroRestController {
 
     }
     
-    @PreAuthorize("hasRole('Admin')")
     @GetMapping("/cantidad")
     public ResponseEntity GetAllCantidad() {
         Result<Cantidad> result = new Result<>();

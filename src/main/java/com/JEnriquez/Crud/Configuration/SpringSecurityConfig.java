@@ -15,29 +15,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SpringSecurityConfig {
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}12345")
-                .roles("Admin")
-                .build();
-
-        UserDetails cliente = User.builder()
-                .username("cliente")
-                .password("{noop}12345")
-                .roles("Cliente")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, cliente);
-    }
-
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password("{noop}12345")
+//                .roles("Admin")
+//                .build();
+//
+//        UserDetails cliente = User.builder()
+//                .username("cliente")
+//                .password("{noop}12345")
+//                .roles("Cliente")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(admin, cliente);
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -45,15 +48,30 @@ public class SpringSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/cajero/cantidadTotal")
-                .hasAnyRole("Admin", "Cliente")
+                .hasAnyAuthority("Administrador", "Cliente")
                 .requestMatchers("cajero/retirar/**")
-                .hasAnyRole("Admin", "Cliente")
+                .hasAnyAuthority("Administrador", "Cliente")
                 .requestMatchers("/cajero/**")
-                .hasRole("Admin")
+                .hasAuthority("Administrador")
                 )
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();
+    }
+
+    @Bean
+    public UserDetailsService jdbcUserDetails(DataSource dataSource) {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
+        manager.setDataSource(dataSource);
+        manager.setUsersByUsernameQuery("select Username, Password, Status from Usuario where Username = ?");
+        manager.setAuthoritiesByUsernameQuery("select Username, NombreRol from RolManager where Username = ?");
+
+        return manager;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
