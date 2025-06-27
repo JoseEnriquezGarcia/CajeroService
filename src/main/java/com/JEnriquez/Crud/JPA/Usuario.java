@@ -10,26 +10,28 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity @Getter @Setter
+@Entity
+@Getter
+@Setter
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idusuario")
-    private int IdUsuario;
-    
+    private int idUsuario;
+
     @Column(name = "nombre")
-    private String Nombre;
-    
+    private String nombre;
+
     @Column(name = "username")
-    private String Username;
-    
+    private String username;
+
     @Column(name = "password")
-    private String Password;
-    
+    private String password;
+
     @Column(name = "saldo")
-    private double Saldo;
-    
+    private double saldo;
+
     @JoinColumn(name = "idrol")
     @ManyToOne
-    public Rol rol;
+    private Rol rol;
 }

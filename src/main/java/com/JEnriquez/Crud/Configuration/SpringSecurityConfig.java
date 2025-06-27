@@ -1,5 +1,7 @@
 package com.JEnriquez.Crud.Configuration;
 
+import com.JEnriquez.Crud.DAO.IUsuarioDAO;
+import com.JEnriquez.Crud.Service.ServiceUser;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,7 @@ import org.springframework.security.config.Customizer;
 import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +26,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
 
 //    @Bean
@@ -49,7 +53,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/cajero/cantidadTotal")
                 .hasAnyAuthority("Administrador", "Cliente")
-                .requestMatchers("cajero/retirar/**")
+                .requestMatchers("/cajero/retirar/**")
                 .hasAnyAuthority("Administrador", "Cliente")
                 .requestMatchers("/cajero/**")
                 .hasAuthority("Administrador")
@@ -58,16 +62,6 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();
-    }
-
-    @Bean
-    public UserDetailsService jdbcUserDetails(DataSource dataSource) {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
-        manager.setDataSource(dataSource);
-        manager.setUsersByUsernameQuery("select Username, Password, Status from Usuario where Username = ?");
-        manager.setAuthoritiesByUsernameQuery("select Username, NombreRol from RolManager where Username = ?");
-
-        return manager;
     }
 
     @Bean
