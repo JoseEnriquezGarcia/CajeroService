@@ -28,7 +28,6 @@ public class ServiceUser implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        System.out.println("aa");
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

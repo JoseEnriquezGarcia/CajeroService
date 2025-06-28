@@ -51,6 +51,10 @@ public class SpringSecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/cajero/deposito/**")
+                .hasAnyAuthority("Administrador", "Cliente")
+                .requestMatchers("/cajero/usuario/**")
+                .hasAnyAuthority("Administrador", "Cliente")
                 .requestMatchers("/cajero/cantidadTotal")
                 .hasAnyAuthority("Administrador", "Cliente")
                 .requestMatchers("/cajero/retirar/**")
