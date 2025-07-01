@@ -70,7 +70,7 @@ public class CajeroRestController {
             return ResponseEntity.internalServerError().body(result.errorMessage);
         }
     }
-
+    
     @GetMapping("/usuario/{Username}")
     public ResponseEntity UsuarioByUsername(@PathVariable String Username) {
         Result result = new Result();
@@ -131,9 +131,9 @@ public class CajeroRestController {
         }
 
     }
-    
+
     @PostMapping("/deposito/{Cantidad}/{Username}")
-    public ResponseEntity depositar(@PathVariable double Cantidad, @PathVariable String Username){
+    public ResponseEntity depositar(@PathVariable double Cantidad, @PathVariable String Username) {
         Result result = new Result();
         try {
             Usuario usuario = iUsuarioDAO.findByUsername(Username).orElseThrow();
@@ -146,13 +146,13 @@ public class CajeroRestController {
             result.errorMessage = ex.getLocalizedMessage();
             result.ex = ex;
         }
-        if(result.correct = true){
+        if (result.correct = true) {
             return ResponseEntity.ok(result);
-        }else{
+        } else {
             return ResponseEntity.internalServerError().body(result.errorMessage);
         }
     }
-    
+
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/retirar/{monto}/{Username}")
     public ResponseEntity retirarEfectivo(@PathVariable Double monto, @PathVariable String Username) {
